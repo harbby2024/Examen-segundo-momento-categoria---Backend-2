@@ -15,22 +15,23 @@ public class ProductoController {
 
     private final ProductoServicio productoServicio;
 
-    // Crear producto (POST /producto)
+    // Crear producto
     @PostMapping
     public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto) {
         Producto nuevo = productoServicio.createProducto(producto);
         return ResponseEntity.ok(nuevo);
     }
 
-    // Listar todos los productos (GET /producto)
+    // Obtener todos los productos
     @GetMapping
-    public ResponseEntity<List<Producto>> listarProductos() {
-        return ResponseEntity.ok(productoServicio.getAllProductos());
+    public ResponseEntity<List<Producto>> obtenerTodos() {
+        List<Producto> productos = productoServicio.getAllProductos();
+        return ResponseEntity.ok(productos);
     }
 
-    // Obtener producto por ID (GET /producto/{id})
+    // Obtener un producto por ID
     @GetMapping("/{id}")
-    public ResponseEntity<Producto> obtenerProducto(@PathVariable Long id) {
+    public ResponseEntity<Producto> obtenerPorId(@PathVariable Long id) {
         Producto producto = productoServicio.getProductoById(id);
         if (producto != null) {
             return ResponseEntity.ok(producto);
@@ -39,7 +40,7 @@ public class ProductoController {
         }
     }
 
-    // Actualizar producto (PUT /producto/{id})
+    // Actualizar producto
     @PutMapping("/{id}")
     public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id, @RequestBody Producto producto) {
         Producto actualizado = productoServicio.updateProducto(id, producto);
@@ -50,10 +51,11 @@ public class ProductoController {
         }
     }
 
-    // Eliminar producto (DELETE /producto/{id})
+    // Eliminar producto
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminarProducto(@PathVariable Long id) {
-        if (productoServicio.deleteProducto(id)) {
+        boolean eliminado = productoServicio.deleteProducto(id);
+        if (eliminado) {
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
